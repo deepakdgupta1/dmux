@@ -161,8 +161,10 @@ export function buildCodexPaneExportSnippet(opts: {
     .join('; ');
 }
 
+export const CODEX_ENABLE_HOOKS_FLAG = '--enable hooks';
+
 export function enableCodexHooksFlag(command: string): string {
-  return command.replace(/(^|;\s*)codex(?=\s|$)/, '$1codex --enable codex_hooks');
+  return command.replace(/(^|;\s*)codex(?=\s|$)/, `$1codex ${CODEX_ENABLE_HOOKS_FLAG}`);
 }
 
 export function buildCodexHookedCommand(

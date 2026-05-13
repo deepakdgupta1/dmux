@@ -6,6 +6,7 @@ import {
 } from './promptStore.js';
 import {
   buildCodexPaneEnvironmentPrefix,
+  CODEX_ENABLE_HOOKS_FLAG,
 } from './codexHooks.js';
 
 export const AGENT_IDS = [
@@ -599,12 +600,12 @@ export async function launchAgentInPane(opts: {
 
       if (promptFilePath) {
         const promptBootstrap = buildPromptReadAndDeleteSnippet(promptFilePath);
-        codexCmd = `${promptBootstrap}; ${codexEnvPrefix} codex --enable codex_hooks "$DMUX_PROMPT_CONTENT"${permissionSuffix}`;
+        codexCmd = `${promptBootstrap}; ${codexEnvPrefix} codex ${CODEX_ENABLE_HOOKS_FLAG} "$DMUX_PROMPT_CONTENT"${permissionSuffix}`;
       } else {
-        codexCmd = `${codexEnvPrefix} codex --enable codex_hooks ${shellQuote(prompt)}${permissionSuffix}`;
+        codexCmd = `${codexEnvPrefix} codex ${CODEX_ENABLE_HOOKS_FLAG} ${shellQuote(prompt)}${permissionSuffix}`;
       }
     } else {
-      codexCmd = `${codexEnvPrefix} codex --enable codex_hooks${permissionSuffix}`;
+      codexCmd = `${codexEnvPrefix} codex ${CODEX_ENABLE_HOOKS_FLAG}${permissionSuffix}`;
     }
     await tmuxService.sendShellCommand(paneId, codexCmd);
     await tmuxService.sendTmuxKeys(paneId, 'Enter');
