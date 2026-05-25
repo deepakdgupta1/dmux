@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 const fs = require('fs');
 
+function finish(payload = {}) {
+  process.stdout.write(JSON.stringify(payload));
+}
+
 let input = '';
 process.stdin.setEncoding('utf8');
 process.stdin.on('data', (chunk) => {
@@ -18,8 +22,11 @@ process.stdin.on('end', () => {
     source: 'codex-stop-hook',
     dmuxPaneId: process.env.DMUX_PANE_ID || '',
     tmuxPaneId: process.env.DMUX_TMUX_PANE_ID || '',
+<<<<<<< HEAD
     expectedDmuxPaneId: 'dmux-1779734821852',
     expectedTmuxPaneId: '%37',
+=======
+>>>>>>> main
     hookEventName: payload.hook_event_name || payload.hookEventName || '',
     turnId: payload.turn_id || payload.turnId || '',
     stopHookActive: payload.stop_hook_active === true || payload.stopHookActive === true,
@@ -30,18 +37,26 @@ process.stdin.on('end', () => {
   };
 
   if (event.hookEventName && event.hookEventName !== 'Stop') {
-    process.exit(0);
+    finish();
+    return;
   }
 
-  if (event.dmuxPaneId !== event.expectedDmuxPaneId) {
-    process.exit(0);
+  const eventFile = process.env.DMUX_CODEX_HOOK_EVENT_FILE || '';
+  if (!event.dmuxPaneId || !eventFile) {
+    finish();
+    return;
   }
 
   try {
+<<<<<<< HEAD
     fs.writeFileSync('/Users/justinschroeder/Projects/dmux/.dmux/worktrees/feat-grok/.codex/dmux/dmux-1779734821852.json', JSON.stringify(event, null, 2));
+=======
+    fs.writeFileSync(eventFile, JSON.stringify(event, null, 2));
+>>>>>>> main
   } catch (error) {
-    process.exit(0);
+    finish();
+    return;
   }
 
-  process.stdout.write(JSON.stringify({ continue: true }));
+  finish();
 });
